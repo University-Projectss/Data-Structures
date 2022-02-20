@@ -1,4 +1,3 @@
 Radix Sort
-Shell Sort
-2 sortari la alegere
+2 sortari la alegere(Counting sort && ...)
 slide-urile cu documentatia

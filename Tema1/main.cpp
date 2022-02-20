@@ -10,9 +10,12 @@ using namespace std::chrono;
 ifstream fin("teste.txt");
 
 vector<int> w;     //vectorul auxiliar pt MergeSort
-vector<int> v;    
+vector<int> victor;    //vectorul generat, il voi copia in alt vct pentru fiecare sortare
+                  //ca sa avem EXACT acelasi vector pentru toate sortarile.
+vector<int> v;      //Acesta va fi folosit la sortari.
 
 void MergeSort(int st, int dr);
+void ShellSort(int n);
 bool testSort();
 
 int main() {
@@ -25,21 +28,22 @@ int main() {
     for(int i = 0; i < t; i++) {
         //time_t startTime, finishTime;
         fin >> n >> maxi;
-        v.resize(n, 0);     //cu n nr. nat. random din intervalul [0, maxi]
+        v.resize(n, 0);
+        victor.resize(n, 0);     //cu n nr. nat. random din intervalul [0, maxi]
 
         srand(time(NULL)); //pentru fiecare rulare vrem sa avem alte seturi de nr random    
         
         for(int j = 0; j < n; j++) 
-            v[j] = rand() % (maxi + 1);
+            victor[j] = rand() % (maxi + 1);
 
         cout << "TESTUL " << i + 1 << ":  ";
         cout << "n= " << n << "   ";
         cout << "max= " << maxi << endl;
 
-        // for(int k = 0; k < n; k++)
-        //     cout << v[k] << " ";
-        // cout << endl;
+       for(int j = 0; j < n; j++) 
+            v[i] = victor[j];
 
+//Prima sortare: Merge Sort
         w.resize(n, 0);
         auto start0 = high_resolution_clock::now();
         MergeSort( 0, n - 1);
@@ -50,10 +54,30 @@ int main() {
         cout << "Merge Sort / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
         testSort() ? cout << "Sortat cu succes!" : cout << "Fail";
         cout << endl;
-        // for(int k = 0; k < n; k++)
-        //     cout << v[k] << " ";
-        // cout << endl;
+        
+
+//A doua sortare: Shell Sort
+        for(int j = 0; j < n; j++) 
+            v[i] = victor[j];
+        
+        start0 = high_resolution_clock::now();
+        ShellSort(n);
+        stop0 = high_resolution_clock::now();
+
+        duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
+
+        cout << "Shell Sort / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
+        testSort() ? cout << "Sortat cu succes!" : cout << "Fail";
+        cout << endl;
+
+
+//A treia sortare: Radix Sort
+        
+
+
     
+        cout << endl;
+        cout << "----------------------------------------------------";
         cout << endl;
     }
 
@@ -67,6 +91,20 @@ bool testSort() {
         if(v[i] > v[i + 1])
             return false;
     return true;
+}
+
+void ShellSort(int n) {
+    int gap, i, j, temp;
+    for( gap = n / 2; gap > 0; gap /= 2) {
+        for( i = gap; i < n; i++) {
+            temp = v[i];
+
+            for(j = i; j >= gap && v[j - gap] > temp; j -= gap)
+                v[j] = v[j - gap];
+
+            v[j] = temp;
+        }
+    }
 }
 
 void MergeSort( int st, int dr) {
