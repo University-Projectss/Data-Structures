@@ -1,1 +1,1 @@
-auto
+ictor[j] = rand() % (maxi + 1)
