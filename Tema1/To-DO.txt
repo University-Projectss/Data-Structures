@@ -1,3 +1,1 @@
-Prezentarea si interpretarea rezultatelor
-
-Testul de rezistente: Sortarea unui vector deja sortat.
+To DO:

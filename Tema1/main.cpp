@@ -8,12 +8,9 @@ using namespace std::chrono;
 
 ifstream fin("teste.txt");
 
-// vector<int> w;          //vectorul auxiliar pt MergeSort si RadixSort
-
 vector<int> victor;    //vectorul generat, il voi copia in alt vct pentru fiecare sortare
                         //ca sa avem EXACT acelasi vector pentru toate sortarile.
 
-// vector<int> v;      //Acesta va fi folosit la sortari.
 
 void merge(vector<int> &arr, int start, int mid, int end);
 void MergeSort(vector<int> &v, int st, int dr, vector<int> &w);
@@ -59,7 +56,7 @@ int main() {
        for(int j = 0; j < n; j++) 
             v[j] = victor[j];
 
-        sort( v.begin(), v.end());
+        // sort( v.begin(), v.end());
 
 //Sortarea C++: sort()
 
@@ -75,8 +72,8 @@ int main() {
 
 
 //Prima sortare: Merge Sort
-        // for(int j = 0; j < n; j++) 
-        //     v[j] = victor[j];
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
 
         w.resize(n, 0);
          start0 = high_resolution_clock::now();
@@ -91,8 +88,8 @@ int main() {
         
 
 //A doua sortare: Shell Sort
-        // for(int j = 0; j < n; j++) 
-        //     v[j] = victor[j];
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
         
         start0 = high_resolution_clock::now();
         ShellSort(v, n);
@@ -106,10 +103,10 @@ int main() {
         
 
 //A treia sortare: Radix Sort
-        // for(int j = 0; j < n; j++) 
-        //     v[j] = victor[j];
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
 
-        //  w.resize(n, 0);
+         w.resize(n, 0);
 
         start0 = high_resolution_clock::now();
         RadixSort(v, n);
@@ -124,8 +121,8 @@ int main() {
 
 
 //A patra sortare: Counting Sort
-        // for(int j = 0; j < n; j++) 
-        //     v[j] = victor[j];
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
 
         start0 = high_resolution_clock::now();
         CountingSort(v, n, maxi);
@@ -140,8 +137,8 @@ int main() {
 
 
 //A cincia sortare: Quick sort (cu pivot random)
-        // for(int j = 0; j < n; j++) 
-        //     v[j] = victor[j];
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
 
         start0 = high_resolution_clock::now();
         QuickSort(v, 0, n - 1);
@@ -161,7 +158,11 @@ int main() {
     return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+
 //Aici avem definite sortarile si functia testSort(), care verifica daca am sortat corect.
+
+////////////////////////////////////////////////////////////////////////////////////////////
 
 bool testSort(vector<int> &v) {
     for(int i = 0; i < v.size() - 1; i++)
