@@ -202,13 +202,13 @@ int medianaOfThree(vector<int> &v, int &a, int &b, int &c) {
 int partitieR(vector<int> &v, int st, int dr) {
     //Aleg pivotul random
     srand(time(NULL));
-    int poz = st + rand() % (dr - st);
+    // int poz = st + rand() % (dr - st);
     
     //Sau cu mediana din trei
-    // int p1 = st + rand() % (dr - st);
-    // int p2 = st + rand() % (dr - st);
-    // int p3 = st + rand() % (dr - st);
-    // int poz = medianaOfThree(v, p1, p2, p3);
+    int p1 = st + rand() % (dr - st);
+    int p2 = st + rand() % (dr - st);
+    int p3 = st + rand() % (dr - st);
+    int poz = medianaOfThree(v, p1, p2, p3);
 
     int aux = v[poz];
     v[poz] = v[dr];
