@@ -1,3 +1,9 @@
+/*
+ Codul a fost gandit sa ruleze intr-un terminal de macos/linux
+ pentru a colora textul afisat pentru o mai buna vizualizare a datelor.
+ Rularea in Codeblocks/CLion poate cauza o afisarea ambigua/iritanta.
+*/
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,11 +13,13 @@ using namespace std;
 using namespace std::chrono;
 
 ifstream fin("teste.txt");
+ofstream fout("iesire.txt");
 
 vector<int> victor;    //vectorul generat, il voi copia in alt vct pentru fiecare sortare
                         //ca sa avem EXACT acelasi vector pentru toate sortarile.
 
 
+void RadixBun(vector<int> &v, int n);
 void merge(vector<int> &arr, int start, int mid, int end);
 void MergeSort(vector<int> &v, int st, int dr, vector<int> &w);
 void ShellSort(vector<int> &v, int n);
@@ -66,7 +74,7 @@ int main() {
 
         auto duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "C++ Sort      / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
+        cout << "C++ Sort          / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
 
@@ -82,7 +90,7 @@ int main() {
 
          duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "\033[1;35mMerge Sort    \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
+        cout << "\033[1;35mMerge Sort        \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
         
@@ -97,7 +105,7 @@ int main() {
 
         duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "Shell Sort    / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
+        cout << "Shell Sort        / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
         
@@ -114,7 +122,7 @@ int main() {
 
         duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "\033[1;35mRadix Sort    \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
+        cout << "\033[1;35mRadix Sort        \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
 
@@ -130,26 +138,47 @@ int main() {
 
         duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "Counting Sort / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
+        cout << "Counting Sort     / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
 
 
 
-//A cincia sortare: Quick sort (cu pivot random)
+//A cincia sortare: Quick sort (cu pivot random sau cu mediana din 3)
+        for(int j = 0; j < n; j++) 
+            v[j] = victor[j];
+
+        if( n == 10000000 && maxi == 10 || n == 100000000 && maxi <= 1000 ) {
+            cout << "\033[1;35mQuick Sort        \033[0m/ \033[1;35m";
+            cout << "\033[1;31mNu pot sorta";
+            cout << "\033[0m" << endl;
+        } else {
+            start0 = high_resolution_clock::now();
+            QuickSort(v, 0, n - 1);
+            stop0 = high_resolution_clock::now();
+
+            duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
+
+            cout << "\033[1;35mQuick Sort        \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
+            testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
+            cout << "\033[0m" << endl;
+        }
+    
+
+//A sasea sortare: Radix Sort b2^16
         for(int j = 0; j < n; j++) 
             v[j] = victor[j];
 
         start0 = high_resolution_clock::now();
-        QuickSort(v, 0, n - 1);
+        RadixBun(v, n);
         stop0 = high_resolution_clock::now();
 
         duration0 = duration_cast<microseconds>(stop0 - start0).count() /1000000.00000000000000;
 
-        cout << "\033[1;35mQuick Sort    \033[0m/ \033[1;35m" << fixed << duration0 << setprecision(5) << "sec" << "\033[0m / ";
+        cout << "Radix Sort (2^16) / " << fixed << duration0 << setprecision(5) << "sec" << " / ";
         testSort(v) ? cout << "\033[1;32mSortat cu succes!" : cout << "\033[1;31mFail";
         cout << "\033[0m" << endl;
-    
+
         cout << endl;
         cout << "----------------------------------------------------";
         cout << endl;
@@ -218,6 +247,7 @@ int partitieR(vector<int> &v, int st, int dr) {
 }
 
 void QuickSort(vector<int> &v, int st, int dr) {
+    
     if(st < dr) {
         int poz = partitieR(v, st, dr);
 
@@ -276,6 +306,42 @@ void RadixSort(vector<int> &v, int n) {
     }
 }
 
+
+void RadixBun(vector<int> &v, int n) {
+    int m = 0, dim = 65536, p = 0;
+    for(int i = 0; i < n; i++) {
+        if(v[i] > m) 
+            m = v[i];
+    }
+
+    vector<int> w;
+    w.resize(n, 0);
+
+    while(m) {
+        int i;
+        vector<int> fr(dim, 0);
+
+        for(i = 0; i < n; i++)
+            fr[(v[i] >> p) & 0xFFFF]++;
+
+        for(i = 1; i < dim; i++)
+            fr[i] += fr[i - 1];
+
+        for(i = n - 1; i >= 0; i--) {
+            w[ fr[(v[i] >> p) & 0xFFFF] - 1 ] = v[i];     //modificam w corespunzator si apoi il copiem in v
+             fr[(v[i] >> p) & 0xFFFF]--;
+        }
+
+        for(i = 0; i < n; i++)
+            v[i] = w[i];
+
+        p += 16;
+        m /= dim;
+    }
+
+}
+
+
 void ShellSort(vector<int> &v, int n) {
     int gap, i, j, temp;
     for( gap = n / 2; gap > 0; gap /= 2) {
@@ -316,3 +382,4 @@ void MergeSort(vector<int> &v, int st, int dr, vector<int> &w) {
     for(a = st, b = 0; a <= dr; a++, b++)
         v[a] = w[b];
 }
+
